@@ -10,7 +10,7 @@ import info.gridworld.grid.*;
 public class CheckersWorld extends ActorWorld {
     private Location lastClicked;
     private static final String MESSAGE = "Checkers";
-    private ArrayList<Tracker> trackers;
+    private ArrayList<Tracker> trackers = new ArrayList<Tracker>();
     /**
      * Value of a Checker when rating
      */

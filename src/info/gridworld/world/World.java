@@ -57,6 +57,7 @@ public class World<T> {
         if (frame == null) {
             frame = new WorldFrame<T>(this);
             frame.setVisible(true);
+            frame.repaint();
         } else {
             frame.repaint();
         }
