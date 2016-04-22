@@ -1,30 +1,63 @@
 package averycowan.checkers;
 
-/*
- * @author Avery Cowan
- *
- * This class defines the properties of each checker piece.
- *
- */
-import info.gridworld.grid.*;
-import info.gridworld.actor.*;
-import java.awt.*;
-import java.util.*;
+import info.gridworld.actor.Actor;
+import info.gridworld.grid.Grid;
+import info.gridworld.grid.Location;
+import java.awt.Color;
+import java.util.ArrayList;
 
+/**
+ * This class defines the properties of a checker piece.
+ *
+ * @author Avery Cowan
+ */
 public class Checker extends Actor {//this means checker is a type of actor
     protected static final int VALUE = 10;
+    /**
+     * The base color used to represent white
+     */
     public static final Color WHITE = Color.RED;
+    /**
+     * The base color used to represent black
+     */
     public static final Color BLACK = Color.BLACK;
+    /**
+     * The color of the player's pieces
+     */
     public static final Color PLAYER_COLOR = BLACK;
+    /**
+     * The color of the computer's pieces
+     */
     public static final Color COMPUTER_COLOR = WHITE;
+    /**
+     * Represents pieces owned by the player
+     */
     public static final boolean PLAYER_COLOR_VALUE = true;
+    /**
+     * How randomized the tints on the pieces should be
+     */
     public static final int COLOR_VARIETY = 60;
+    /**
+     * If colors should be true rather than artistic
+     */
     protected boolean isReal;
+    /**
+     * What color the piece is in the gui
+     */
     public final boolean color;
+    /**
+     * Creates a basic player owned checker
+     */
     public Checker() {
         this(PLAYER_COLOR_VALUE);
         isReal = false;
     }
+    /**
+     * Constructs a new Checker of a desired team and artistic style
+     *
+     * @param white if the checker is on the white team
+     * @param real if white really means white and not just red
+     */
     public Checker(boolean white, boolean real) {
         this(white);
         if (real) {
@@ -33,12 +66,20 @@ public class Checker extends Actor {//this means checker is a type of actor
         isReal = real;
     }
     /**
-     * makes a new checker
+     * Constructs a new Checker of a desired team
+     *
+     * @param white if the checker is on the white team
      */
     public Checker(boolean white) {
         super();
         color = white;
     }
+    /**
+     * Generates a randomly tinted color
+     *
+     * @param b team
+     * @see PLAYER_COLOR_VALUE
+     */
     protected Color newColor(boolean b) {
         Color c = null;
         if (b == PLAYER_COLOR_VALUE) {
@@ -60,6 +101,12 @@ public class Checker extends Actor {//this means checker is a type of actor
         }
         return new Color(red, green, blue);
     }
+    /**
+     * This actually changes the color, but is protected and therefore hidden
+     * from the user.
+     *
+     * @see Actor.setColor()
+     */
     protected void protectedSetColor(Color c) {
         super.setColor(c);
     }
@@ -205,6 +252,7 @@ public class Checker extends Actor {//this means checker is a type of actor
     /**
      * does nothing
      */
+    @Override
     public void act() {
     }
     /**
@@ -228,7 +276,8 @@ public class Checker extends Actor {//this means checker is a type of actor
      * @param l the designated location to move to
      * @param jumpPossible if a jump is possible on the board by any piece of
      * the same color
-     * @return if the piece can move the specified locaation
+     * @param real if it should create a tracker on the world
+     * @return if the piece can move the specified location
      */
     public boolean doMove(Location l, boolean jumpPossible, boolean real) {
         Grid<Actor> gr = getGrid();
@@ -264,6 +313,7 @@ public class Checker extends Actor {//this means checker is a type of actor
      * @param dirs the list of directions indicating a move of jump sequence
      * leading to the destination
      * @param l the destination
+     * @param real if it should create a tracker on the world
      */
     public void move(boolean jump, ArrayList<Integer> dirs, Location l, boolean real) {
         CheckersWorld world = ((CheckersGrid) getGrid()).getWorld();
@@ -314,6 +364,7 @@ public class Checker extends Actor {//this means checker is a type of actor
      *
      * @return the name of the class, the color value and the location
      */
+    @Override
     public String toString() {
         return getClass().getName() + "[" + (color == PLAYER_COLOR_VALUE) + ", " + getLocation() + "]";
     }

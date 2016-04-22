@@ -9,15 +9,22 @@ import info.gridworld.actor.Actor;
 import info.gridworld.grid.BoundedGrid;
 
 /**
+ * This is a custom implementation that remembers the world its it.
  *
- * @author avecowa
+ * @author Avery Cowan
  */
 public class CheckersGrid extends BoundedGrid<Actor> {
     private CheckersWorld world;
+    /**
+     * This calls super(rows, cols) and saves the world
+     */
     public CheckersGrid(int rows, int cols, CheckersWorld cw) {
         super(rows, cols);
         world = cw;
     }
+    /**
+     * Gets the world this grid lives in
+     */
     public CheckersWorld getWorld() {
         return world;
     }

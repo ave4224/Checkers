@@ -1,13 +1,29 @@
 package averycowan.checkers;
 
-/*
+import info.gridworld.actor.Actor;
+import info.gridworld.actor.ActorWorld;
+import info.gridworld.grid.Grid;
+import info.gridworld.grid.Location;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.TreeSet;
+
+/**
+ * This class stands between the Grid and the GUI as well as holds the AI.
+ *
  * @author Avery Cowan
  */
-import java.util.*;
-import info.gridworld.actor.*;
-import info.gridworld.grid.*;
-
 public class CheckersWorld extends ActorWorld {
+    /**
+     * If this is an issue I recommend reading
+     * <a target='_blank_' href="http://lmgtfy.com/?q=main+method+in+java">this</a>
+     * before continuing.
+     *
+     * @param args This can be anything. Have fun.
+     */
+    public static void main(String[] args) {
+        new CheckersWorld();//starts the game
+    }
     private Location lastClicked;
     private static final String MESSAGE = "Checkers";
     private ArrayList<Tracker> trackers = new ArrayList<Tracker>();
@@ -39,7 +55,7 @@ public class CheckersWorld extends ActorWorld {
         super();
         reset();
     }
-    public void reset() {
+    private void reset() {
         setGrid(new CheckersGrid(8, 8, this));
         for (int i = 0; i < 3; i++) {
             for (int j = (i + 1) % 2; j < 8; j += 2) {
@@ -426,6 +442,7 @@ public class CheckersWorld extends ActorWorld {
             gameOver(Checker.PLAYER_COLOR_VALUE);
         }
     }
+    @Override
     public void step() {
         if (gameOver) {
             return;
@@ -472,6 +489,9 @@ public class CheckersWorld extends ActorWorld {
             gameOver = true;
         }
     }
+    /**
+     * Adds a last move tracker to the gui
+     */
     public void addTracker(Tracker loc) {
         System.out.println("Tracking " + loc.loc);
         trackers.add(loc);
@@ -492,9 +512,15 @@ public class CheckersWorld extends ActorWorld {
 //      }
 //    }
 //  }
-    void clearTrackers() {
+    /**
+     * Clears the list of last move trackers
+     */
+    public void clearTrackers() {
         trackers.clear();
     }
+    /**
+     * Returns the list of last move trackers
+     */
     public ArrayList<Tracker> getTrackers() {
         return trackers;
     }

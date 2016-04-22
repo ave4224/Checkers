@@ -17,21 +17,30 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 /**
+ * This class has the purpose of drawing the markers of previous moves.
  *
- * @author avecowa
+ * @author Avery Cowan
  */
 public class CheckersGridPanel extends GridPanel {
+    /**
+     * This calls the super(map,res) constructor and saves the world.
+     */
     public CheckersGridPanel(DisplayMap map, ResourceBundle res, CheckersWorld cw) {
         super(map, res);
         this.world = cw;
     }
-    protected CheckersWorld world;
+    private CheckersWorld world;
+    /**
+     * Calls super.paintComponent then draws the last move trackers
+     *
+     */
+    @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         drawTrackers(g2);
     }
-    public void drawTrackers(Graphics2D g2) {
+    private void drawTrackers(Graphics2D g2) {
         ArrayList<Tracker> trackers = world.getTrackers();
         for (int index = 0; index < trackers.size(); index++) {
             Location loc = (Location) trackers.get(index).loc;

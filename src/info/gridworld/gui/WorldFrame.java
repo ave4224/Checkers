@@ -295,11 +295,11 @@ public class WorldFrame<T> extends JFrame {
         mbar.add(menu = makeMenu("menu.file"));
         newGridMenu = makeMenu("menu.file.new");
         if (world instanceof CheckersWorld) {
-            menu.add(makeMenuItem("menu.file.newgame", new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    ((CheckersWorld) (world)).reset();
-                }
-            }));
+//            menu.add(makeMenuItem("menu.file.newgame", new ActionListener() {
+//                public void actionPerformed(ActionEvent e) {
+//                    ((CheckersWorld) (world)).reset();
+//                }
+//            }));
         } else {
             menu.add(newGridMenu);
             menuItemsDisabledDuringRun.add(newGridMenu);

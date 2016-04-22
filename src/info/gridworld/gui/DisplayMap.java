@@ -35,7 +35,7 @@ import javax.swing.Icon;
  */
 public class DisplayMap {
     private HashMap<Class, Display> map = new HashMap<Class, Display>();
-    private Display defaultDisplay = new CustomDefaultDisplay();
+    private Display defaultDisplay = new DefaultDisplay();
     /**
      * Associates a display object with a grid occupant class.
      *

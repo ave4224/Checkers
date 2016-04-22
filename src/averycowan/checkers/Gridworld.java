@@ -1,21 +1,24 @@
 package averycowan.checkers;
 
-/*
+import info.gridworld.actor.Actor;
+import info.gridworld.grid.Grid;
+import info.gridworld.grid.Location;
+import java.util.ArrayList;
+
+/**
+ * This is a utility class used for cloning Gridworld objects
+ *
  * @author Avery Cowan
  */
-import info.gridworld.actor.*;
-import info.gridworld.grid.*;
-import java.util.*;
-
 public abstract class Gridworld {
     /**
-     * returns a clone of loc
+     * Clones a Location
      */
     public static Location cloneLoc(Location loc) {
         return new Location(loc.getRow(), loc.getCol());
     }
     /**
-     * returns a clone of gr
+     * clones a Grid
      *
      * @param locList a list of occupants
      */

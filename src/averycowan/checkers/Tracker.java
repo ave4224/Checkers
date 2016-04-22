@@ -8,8 +8,9 @@ package averycowan.checkers;
 import info.gridworld.grid.Location;
 
 /**
+ * This class represents a location to be shaded as part of the last move path.
  *
- * @author avecowa
+ * @author Avery Cowan
  */
 public class Tracker {
     public Location loc;
