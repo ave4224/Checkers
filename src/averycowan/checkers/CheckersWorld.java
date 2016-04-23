@@ -78,7 +78,6 @@ public class CheckersWorld extends ActorWorld {
      * Called by the GUI when a location is clicked
      */
     public boolean locationClicked(Location l) {//I had to modify the base User Interface to make it so users can't overide my program and access the World.
-        System.out.println(playerTurn);
         if (gameOver) {
             return true;
         }
@@ -117,7 +116,6 @@ public class CheckersWorld extends ActorWorld {
         }
         show();
         //((Checker)(getGrid().get(l))).blink();
-        System.out.println(getGrid());
         if (realMove(l)) {
             playerTurn = false;
             lastMove.add(new Move(l, lastClicked, 1));
@@ -146,9 +144,9 @@ public class CheckersWorld extends ActorWorld {
                     checkGrid();
                     draw();
                     playerTurn = true;
-                    System.out.println("Thread Over");
                     lastClicked = null;
                     t.getFrame().setRunMenuItemsEnabled(true);
+                    setMessage("Your turn. Click a piece to move it.");
                     show();
                 }
             }.start();
@@ -506,7 +504,6 @@ public class CheckersWorld extends ActorWorld {
      * Adds a last move tracker to the gui
      */
     public void addTracker(Tracker loc) {
-        System.out.println("Tracking " + loc.loc);
         trackers.add(loc);
     }
 //  public void step(){
