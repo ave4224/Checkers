@@ -1,3 +1,5 @@
 build/
 test/
 dist/README.TXT
+.DS_Store
+*/.DS.Store
