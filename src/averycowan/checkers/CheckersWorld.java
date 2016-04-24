@@ -29,26 +29,22 @@ public class CheckersWorld extends ActorWorld {
     /**
      * Value of a Checker when rating
      */
-    public static final float CHECKER_VALUE = (float) 1.0;
+    public static final float CHECKER_VALUE = 1.0f;
     /**
      * Value of a King when rating
      */
-    public static final float KING_VALUE = (float) 1.9375;
+    public static final float KING_VALUE = 1.9375f;
     /**
      * Value of a row advancment when rating
      */
-    public static final float ROW_VALUE = (float) 0.003125;
+    public static final float ROW_VALUE = 0.003125f;
     /**
-     * How many moves to look ahead
+     * How many extra moves to look ahead when pieces are low
      */
-    public static final int ITERS = 6;
-    /**
-     * How many moves to look ahead when pieces are low
-     */
-    public static final int ITER_SUM = ITERS + 7;
+    public static final int ITER_BOOST = 7;
+    private int iters;
     private boolean gameOver;
     private boolean playerTurn;
-    private byte reps;
     private ArrayList<Move> lastMove = new ArrayList<Move>();
     public CheckersWorld() {
         super();
@@ -66,8 +62,9 @@ public class CheckersWorld extends ActorWorld {
                 add(new Location(i, j), new Checker(true, true));
             }
         }
-        reps = 0;
         lastClicked = null;
+        setMessage("Welcome to Checkers! Click on a piece to make a move.");
+        iters = CheckersGUIController.INITIAL_ITERS;
         clearTrackers();
         gameOver = false;
         playerTurn = true;
@@ -79,6 +76,10 @@ public class CheckersWorld extends ActorWorld {
      */
     public boolean locationClicked(Location l) {//I had to modify the base User Interface to make it so users can't overide my program and access the World.
         if (gameOver) {
+            return true;
+        }
+        if (getFrame().getGUIController().isRunning()) {
+            setMessage("The AI is already playing for you right now. You can't play while the computer is playing for you.");
             return true;
         }
         if (!playerTurn) {
@@ -130,7 +131,7 @@ public class CheckersWorld extends ActorWorld {
                 public void run() {
                     t.getFrame().setRunMenuItemsEnabled(false);
                     show();
-                    Move move = getBestComputerMove(getGrid(), Math.max(ITERS, ITER_SUM - getGrid().getOccupiedLocations().size()));
+                    Move move = getBestComputerMove(getGrid(), Math.max(iters, ITER_BOOST - getGrid().getOccupiedLocations().size()));
                     if (move.isNull()) {
                         gameOver(Checker.PLAYER_COLOR_VALUE);
                         return;
@@ -239,7 +240,7 @@ public class CheckersWorld extends ActorWorld {
     /**
      * finds the best move for the computer to make
      *
-     * @param iter the ammount of turns to look ahead
+     * @param iter the amount of turns to look ahead
      */
     public Move getBestComputerMove(Grid<Actor> gr, int iter) {
         ArrayList<Location> locList = gr.getOccupiedLocations();
@@ -299,7 +300,7 @@ public class CheckersWorld extends ActorWorld {
     /**
      * finds the best move for the player to make
      *
-     * @param iter the ammount of turns to look ahead
+     * @param iter the amount of turns to look ahead
      */
     public Move getBestPlayerMove(Grid<Actor> gr, int iter) {
         ArrayList<Location> locList = gr.getOccupiedLocations();
@@ -452,7 +453,7 @@ public class CheckersWorld extends ActorWorld {
         }
         playerTurn = false;
         checkGrid();
-        Move move = getBestPlayerMove(getGrid(), ITERS - 1);
+        Move move = getBestPlayerMove(getGrid(), iters - 1);
         if (move.isNull()) {
             gameOver(!Checker.PLAYER_COLOR_VALUE);
             return;
@@ -466,7 +467,7 @@ public class CheckersWorld extends ActorWorld {
         }
         new Thread() {
             public void run() {
-                Move move = getBestComputerMove(getGrid(), ITERS);
+                Move move = getBestComputerMove(getGrid(), iters);
                 if (move.isNull()) {
                     gameOver(Checker.PLAYER_COLOR_VALUE);
                     return;
@@ -475,6 +476,8 @@ public class CheckersWorld extends ActorWorld {
                 realMove(move.mLoc);
                 lastClicked = null;
                 playerTurn = true;
+                checkGrid();
+                show();
             }
         }.start();
     }
@@ -537,5 +540,61 @@ public class CheckersWorld extends ActorWorld {
     @Override
     public Set<String> getGridClasses() {
         return new TreeSet<String>();
+    }
+    /**
+     * Begins Computer vs. Computer play
+     */
+    public void run() {
+        new Thread() {
+            public void run() {
+                while (getFrame().getGUIController().isRunning()) {
+                    if (gameOver) {
+                        return;
+                    }
+                    if (!playerTurn) {
+                        setMessage("It is not the player's turn.");
+                        return;
+                    }
+                    setMessage("The computer is calculating a move for you.");
+                    playerTurn = false;
+                    checkGrid();
+                    Move move = getBestPlayerMove(getGrid(), iters - 1);
+                    if (move.isNull()) {
+                        gameOver(!Checker.PLAYER_COLOR_VALUE);
+                        return;
+                    }
+                    lastClicked = move.pLoc();
+                    realMove(move.mLoc);
+                    checkGrid();
+                    show();
+                    if (gameOver) {
+                        return;
+                    }
+                    setMessage("The computer is calculating a move in responce.");
+                    move = getBestComputerMove(getGrid(), iters);
+                    if (move.isNull()) {
+                        gameOver(Checker.PLAYER_COLOR_VALUE);
+                        return;
+                    }
+                    lastClicked = move.pLoc();
+                    realMove(move.mLoc);
+                    lastClicked = null;
+                    playerTurn = true;
+                    checkGrid();
+                    show();
+                }
+            }
+        }.start();
+    }
+    /**
+     * Ends Computer vs. Computer play
+     */
+    public void stop() {
+    }
+    /**
+     * Sets the maximum depth of the AI algorithm
+     */
+    public void setIters(int depth) {
+        iters = depth;
     }
 }

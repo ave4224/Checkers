@@ -17,6 +17,7 @@
  */
 package info.gridworld.gui;
 
+import averycowan.checkers.CheckersGUIController;
 import info.gridworld.grid.*;
 import info.gridworld.world.World;
 import java.awt.Dimension;
@@ -30,8 +31,6 @@ import java.util.Comparator;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeSet;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.*;
 
 /**
@@ -42,19 +41,19 @@ import javax.swing.*;
  */
 public class GUIController<T> {
     public static final int INDEFINITE = 0, FIXED_STEPS = 1, PROMPT_STEPS = 2;
-    private static final int MIN_DELAY_MSECS = 10, MAX_DELAY_MSECS = 1000;
-    private static final int INITIAL_DELAY = MIN_DELAY_MSECS
+    protected static final int MIN_DELAY_MSECS = 10, MAX_DELAY_MSECS = 1000;
+    protected static final int INITIAL_DELAY = MIN_DELAY_MSECS
             + (MAX_DELAY_MSECS - MIN_DELAY_MSECS) / 2;
-    private Timer timer;
-    private JButton stepButton, runButton, stopButton;
-    private JComponent controlPanel;
-    private GridPanel display;
-    private WorldFrame<T> parentFrame;
-    private int numStepsToRun, numStepsSoFar;
-    private ResourceBundle resources;
-    private DisplayMap displayMap;
-    private boolean running;
-    private Set<Class> occupantClasses;
+    public Timer timer;
+    protected JButton stepButton, runButton, stopButton;
+    protected JComponent controlPanel;
+    protected GridPanel display;
+    public WorldFrame<T> parentFrame;
+    protected int numStepsToRun, numStepsSoFar;
+    protected ResourceBundle resources;
+    protected DisplayMap displayMap;
+    protected boolean running;
+    protected Set<Class> occupantClasses;
     /**
      * Creates a new controller tied to the specified display and gui frame.
      *
@@ -180,9 +179,7 @@ public class GUIController<T> {
         stopButton.setEnabled(false);
         controlPanel.add(Box.createRigidArea(spacer));
         controlPanel.add(new JLabel(resources.getString("slider.gui.slow")));
-        JSlider speedSlider = new JSlider(MIN_DELAY_MSECS, MAX_DELAY_MSECS,
-                INITIAL_DELAY);
-        speedSlider.setInverted(true);
+        JSlider speedSlider = CheckersGUIController.constructSpeedSlider(this);
         speedSlider.setPreferredSize(new Dimension(100, speedSlider
                 .getPreferredSize().height));
         speedSlider.setMaximumSize(speedSlider.getPreferredSize());
@@ -210,11 +207,6 @@ public class GUIController<T> {
         stopButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 stop();
-            }
-        });
-        speedSlider.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent evt) {
-                timer.setDelay(((JSlider) evt.getSource()).getValue());
             }
         });
     }

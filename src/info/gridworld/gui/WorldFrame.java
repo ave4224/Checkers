@@ -18,6 +18,7 @@
  */
 package info.gridworld.gui;
 
+import averycowan.checkers.CheckersGUIController;
 import averycowan.checkers.CheckersWorld;
 import averycowan.checkers.CheckersGridPanel;
 import info.gridworld.grid.Grid;
@@ -167,7 +168,7 @@ public class WorldFrame<T> extends JFrame {
         Grid<T> gr = world.getGrid();
         gridClasses.add(gr.getClass());
         makeNewGridMenu();
-        control = new GUIController<T>(this, display, displayMap, resources);
+        control = new CheckersGUIController<T>(this, display, displayMap, resources);
         content.add(control.controlPanel(), BorderLayout.SOUTH);
         messageArea = new JTextArea(2, 35);
         messageArea.setEditable(false);
@@ -491,5 +492,11 @@ public class WorldFrame<T> extends JFrame {
                 area.copy(); // copy to clipboard
             }
         }
+    }
+    /**
+     * Returns the GUIController for this WorldFrame
+     */
+    public GUIController<T> getGUIController() {
+        return control;
     }
 }
